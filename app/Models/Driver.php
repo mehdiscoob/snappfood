@@ -6,16 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Service extends Model
+class Driver extends Model
 {
     use HasFactory,SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
-        'name', 'description','admin_id',
+        'name',
+        'family',
+        'national_code',
+        'birthday',
+        'mobile_number',
     ];
-
-    public function tickets()
-    {
-        return $this->hasMany(Ticket::class);
-    }
 }

@@ -23,10 +23,6 @@ class CreateUsersTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-        // Insert data for roles
-        DB::table('users')->insert([
-            ['name' => 'super_admin',"email"=>"admin@gmail.com","password"=>"1234","api_token"=>\Illuminate\Support\Str::random(60)],
-        ]);
     }
 
     public function down()
