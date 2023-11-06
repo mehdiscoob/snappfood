@@ -21,8 +21,8 @@ class OrderRepository implements OrderRepositoryInterface
     {
         $products = DB::table('products as p')->select("od.id as odId", "p.name as product_name")
             ->join('orderdetails as od', 'p.id', '=', 'od.id');
-        $trips = DB::table("trips as t")->select("CONCAT('d.name d.family') as driver_name", "t.*")
-            ->join("drivers as d", 'd.id', '=', 't.driver_id');
+        $trips = DB::table("trips as t")->select("CONCAT('u.name u.family') as driver_name", "t.*")
+            ->join("users as u", 'u.id', '=', 't.driver_id');
         return DB::table("orders as o")
             ->join('vendors as v', 'o.vendor_id', '=', 'v.id')
             ->joinSub($products, 'op', 'op.odId', '=', 'o.id')
@@ -67,6 +67,21 @@ class OrderRepository implements OrderRepositoryInterface
         }
         return false;
     }
+
+    /**
+     * Check if the order has associated trips.
+     *
+     * @param int $orderId The ID of the order.
+     * @return \stdClass|null An object containing order ID, user ID, and associated trip ID if trips exist, or null otherwise.
+     */
+    public function hasTrips(int $orderId): ?\stdClass
+    {
+        return DB::table('orders as o')->select(["o.id", 'o.user_id', "t.id as tripId","t.status as tripStatus","o.delivery_time"])
+            ->leftJoin("trips as t", 'o.id', '=', "t.order_id")
+            ->where('o.id', $orderId)
+            ->first();
+    }
+
 
     /**
      * Delete an order by ID.

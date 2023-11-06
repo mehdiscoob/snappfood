@@ -20,15 +20,12 @@ Route::get("/{id}",[\App\Http\Controllers\UserController::class,'getUserById'])-
 Route::post("verify/{id}",[\App\Http\Controllers\UserController::class,'verifyAccount'])->middleware('auth:api');
 });
 
-Route::middleware('auth:api')->prefix('ticket')->group(function () {
-    Route::get("/",[\App\Http\Controllers\TicketController::class,"userTickets"]);
-    Route::post("/",[\App\Http\Controllers\TicketController::class,"create"]);
-    Route::post("/{id}",[\App\Http\Controllers\TicketController::class,"changeStatus"]);
-
+Route::middleware('auth:api')->prefix('order')->group(function () {
+//    Route::get("/",[\App\Http\Controllers\Order\OrderController::class,"userTickets"]);
+    Route::post("/",[\App\Http\Controllers\Order\OrderController::class,"createOrder"]);
 });
 
-Route::middleware('auth:api')->prefix('service')->group(function () {
-    Route::post("/",[\App\Http\Controllers\ServiceController::class,"store"]);
-    Route::get("/",[\App\Http\Controllers\ServiceController::class,"index"]);
-
+Route::middleware('auth:api')->prefix('delay')->group(function () {
+    Route::post("/",[\App\Http\Controllers\DelayReport\DelayReportController::class,"createDelayTime"]);
+    Route::get("/vendor/order/time/{id}",[\App\Http\Controllers\DelayReport\DelayReportController::class,"getByReportOrderByDelayTime"]);
 });

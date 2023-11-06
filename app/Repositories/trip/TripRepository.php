@@ -5,7 +5,7 @@ namespace App\Repositories\trip;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 
-class TripsRepository implements TripsRepositoryInterface
+class TripRepository implements TripRepositoryInterface
 {
     /**
      * Get paginated trips with associated data.
@@ -13,11 +13,11 @@ class TripsRepository implements TripsRepositoryInterface
      * @param int $perPage The number of trips per page.
      * @return \Illuminate\Contracts\Pagination\Paginator
      */
-    public function paginate(int $perPage): Paginator
+    public function paginate(int $perPage=50): Paginator
     {
         return DB::table('trips as t')
-            ->select('t.*', 'd.name as driver_name', 'd.family as driver_family')
-            ->join('drivers as d', 't.driver_id', '=', 'd.id')
+            ->select('t.*', 'u.name as driver_name', 'u.family as driver_family')
+            ->join('users as u', 't.driver_id', '=', 'u.id')
             ->paginate($perPage);
     }
 
@@ -30,6 +30,23 @@ class TripsRepository implements TripsRepositoryInterface
     public function findById(int $tripId): ?\stdClass
     {
         return DB::table('trips')->where('id', $tripId)->first();
+    }
+
+    /**
+     * Find trips associated with a specific order by order ID.
+     *
+     * @param int $orderId The ID of the order.
+     * @param int $perPage The number of trips per page.
+     * @return \Illuminate\Contracts\Pagination\Paginator
+     */
+    public function findByOrder(int $orderId, int $perPage=50): Paginator
+    {
+        return DB::table('trips as t')
+            ->select('t.*', 'u.name as driver_name', 'u.family as driver_family')
+            ->join('users as u', 't.driver_id', '=', 'u.id')
+            ->join('orders as o', 't.order_id', '=', 'o.id')
+            ->where('t.order_id', $orderId)
+            ->paginate($perPage);
     }
 
     /**

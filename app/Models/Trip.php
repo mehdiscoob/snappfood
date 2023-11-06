@@ -32,15 +32,6 @@ class Trip extends Model
         'order_id',
     ];
 
-    /**
-     * Get the driver assigned to the trip.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function driver()
-    {
-        return $this->belongsTo(Driver::class);
-    }
 
     /**
      * Get the order associated with the trip.
@@ -50,5 +41,15 @@ class Trip extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    /**
+     * Get the user associated with the trip.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

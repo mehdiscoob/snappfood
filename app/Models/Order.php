@@ -31,7 +31,9 @@ class Order extends Model
         'delivery_time',
         'total_price',
         'total_count',
+        'orderNumber',
         'vendor_id',
+        'user_id',
     ];
 
     /**
@@ -52,5 +54,15 @@ class Order extends Model
     public function products()
     {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    /**
+     * Get the user associated with the order.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

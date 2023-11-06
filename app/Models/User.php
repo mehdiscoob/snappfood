@@ -18,7 +18,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email','email_verified_at','verification_code','api_token','mobile_verified_at','verified', 'mobile', 'password',
+        'name', 'email','email_verified_at','verification_code',
+        'api_token','mobile_verified_at','verified', 'mobile',
+        'password',"role"
     ];
 
     /**
@@ -40,39 +42,35 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-    public function roles()
+
+    /**
+     * Get the orders included in the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function order()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->hasMany(Order::class);
     }
 
-    public function permissions()
+    /**
+     * Get the trips included in the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function trip()
     {
-        return $this->belongsToMany(Permission::class);
+        return $this->hasMany(Trip::class);
     }
 
-    public function hasRole($role)
+    /**
+     * Get the delay_reports included in the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function delay_report()
     {
-        return $this->roles->contains('name', $role);
+        return $this->hasMany(DelayReport::class);
     }
 
-    public function hasPermission($permission)
-    {
-        return $this->permissions->contains('name', $permission);
-    }
-
-    public function hasPermissionInRoles($permission)
-    {
-        return $this->roles->flatMap(function ($role) {
-            return $role->permissions;
-        })->contains('name', $permission);
-    }
-    public function tickets()
-    {
-        return $this->hasMany(Ticket::class);
-    }
-
-    public function service()
-    {
-        return $this->hasMany(Service::class,"admin_id");
-    }
 }

@@ -5,11 +5,11 @@ namespace App\Repositories\trip;
 use Illuminate\Contracts\Pagination\Paginator;
 
 /**
- * Interface TripsRepositoryInterface
+ * Interface TripRepositoryInterface
  *
  * @package App\Repositories
  */
-interface TripsRepositoryInterface
+interface TripRepositoryInterface
 {
     /**
      * Get paginated trips with associated data.
@@ -17,7 +17,7 @@ interface TripsRepositoryInterface
      * @param int $perPage The number of trips per page.
      * @return \Illuminate\Contracts\Pagination\Paginator
      */
-    public function paginate(int $perPage): Paginator;
+    public function paginate(int $perPage=50): Paginator;
 
     /**
      * Get a specific trip by its ID.
@@ -26,6 +26,15 @@ interface TripsRepositoryInterface
      * @return \stdClass|null
      */
     public function findById(int $tripId): ?\stdClass;
+
+    /**
+     * Find trips associated with a specific order by order ID.
+     *
+     * @param int $orderId The ID of the order.
+     * @param int $perPage The number of trips per page.
+     * @return \Illuminate\Contracts\Pagination\Paginator
+     */
+    public function findByOrder(int $orderId, int $perPage=50): Paginator;
 
     /**
      * Create a new trip record.

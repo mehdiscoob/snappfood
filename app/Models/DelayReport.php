@@ -46,13 +46,14 @@ class DelayReport extends Model
         return $this->belongsTo(Order::class);
     }
 
+
     /**
-     * Get the agent associated with the report.
+     * Get the user associated with the delay_report.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function agent()
+    public function user()
     {
-        return $this->belongsTo(Agent::class);
+        return $this->belongsTo(User::class);
     }
 }

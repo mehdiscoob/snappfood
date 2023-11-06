@@ -23,7 +23,7 @@ class VendorFactory extends Factory
     {
         return [
             'name' => $this->faker->company,
-            'delivery_time' => $this->faker->randomNumber(2) . ' days', // Random delivery time in days
+            'delivery_time' => $this->faker->numberBetween(1, 30),
         ];
     }
 }

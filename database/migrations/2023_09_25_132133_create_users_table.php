@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('mobile_verified_at')->nullable();
             $table->string('password');
             $table->string('api_token')->nullable();
+            $table->enum("role",['customer','agent','driver'])->default('customer');
             $table->boolean('verified')->default(false);
             $table->rememberToken();
             $table->index("email");

@@ -32,6 +32,7 @@ class UserFactory extends Factory
             'api_token' => \Illuminate\Support\Str::random(60), // Generate a random API token
             'verified' => true, // Assuming you want all users to be verified
             'remember_token' => \Illuminate\Support\Str::random(10),
+            'role' => $this->faker->randomElement(['customer','agent','driver'])
         ];
     }
 }

@@ -15,14 +15,14 @@ class CreateTripsTable extends Migration
     {
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('driver_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('order_id');
             $table->enum('status', ['ASSIGNED', 'AT_VENDOR', 'PICKED', 'DELIVERED'])->default('ASSIGNED'); // Enum column
             $table->softDeletes();
             $table->timestamps();
-            $table->index('driver_id');
+            $table->index('user_id');
             $table->index('order_id');
-            $table->foreign('driver_id')->references('id')->on('drivers')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
         });
     }

@@ -18,9 +18,9 @@ class CreateOrdersTable extends Migration
             $table->uuid('orderNumber')->unique()->notNullable();
             $table->unsignedBigInteger('vendor_id');
             $table->unsignedBigInteger('user_id');
-            $table->date('delivery_time');
-            $table->decimal('total_price', 10, 2);
-            $table->integer('total_count');
+            $table->timestamp('delivery_time');
+            $table->decimal('total_price', 10, 2)->default(0);
+            $table->integer('total_count')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->index('vendor_id');
