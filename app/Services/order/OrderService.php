@@ -28,7 +28,7 @@ class OrderService implements OrderServiceInterface
      * @param array $data The data for the new order.
      * @return array The created order data.
      */
-    public function create(array $data)
+    public function create(array $data) : array
     {
         $dateTime = new \DateTime(now());
         $dateTime->modify('+50 minutes');
@@ -39,7 +39,7 @@ class OrderService implements OrderServiceInterface
     }
 
 
-    public function findById(int $id)
+    public function findById(int $id) : ?array
     {
         return $this->orderRepository->find($id);
     }
@@ -50,7 +50,7 @@ class OrderService implements OrderServiceInterface
      * @param int $id The ID of the order.
      * @return array|null The order data, or null if not found.
      */
-    public function hasTrips(int $id)
+    public function hasTrips(int $id): bool
     {
         return $this->orderRepository->hasTrips($id);
     }
@@ -61,7 +61,7 @@ class OrderService implements OrderServiceInterface
      * @param int $id The ID of the order.
      * @return bool True if the order has trips, false otherwise.
      */
-    public function update(int $id,array $data)
+    public function update(int $id,array $data): bool
     {
         return $this->orderRepository->update($id,$data);
     }
