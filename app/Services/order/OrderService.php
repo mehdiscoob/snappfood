@@ -2,6 +2,7 @@
 
 namespace App\Services\order;
 
+use App\Models\Order;
 use App\Repositories\order\OrderRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -23,34 +24,45 @@ class OrderService implements OrderServiceInterface
     }
 
     /**
-     * Create a new order with additional data.
+     * Create a new order with the provided data.
      *
      * @param array $data The data for the new order.
-     * @return array The created order data.
+     *
+     * @return Order The created order instance.
+     *
+     * @throws \Exception If there is an error while creating the order.
      */
-    public function create(array $data) : array
+    public function create(array $data): Order
     {
         $dateTime = new \DateTime(now());
         $dateTime->modify('+50 minutes');
         $data['delivery_time'] = $dateTime->format('Y-m-d H:i:s');
-        $data['user_id']=Auth::id();
-        $data['orderNumber']=Str::uuid();
+        $data['user_id'] = Auth::id();
+        $data['orderNumber'] = Str::uuid();
+
         return $this->orderRepository->create($data);
-    }
-
-
-    public function findById(int $id) : ?array
-    {
-        return $this->orderRepository->find($id);
     }
 
     /**
      * Find an order by its ID.
      *
-     * @param int $id The ID of the order.
-     * @return array|null The order data, or null if not found.
+     * @param int $id The ID of the order to find.
+     *
+     * @return Order|null The found order instance or null if not found.
      */
-    public function hasTrips(int $id): bool
+    public function findById(int $id): ?Order
+    {
+        return $this->orderRepository->find($id);
+    }
+
+
+    /**
+     * Find an order by its ID.
+     *
+     * @param int $id The ID of the order.
+     * @return \stdClass|null An object containing order ID, user ID, and associated trip ID if trips exist, or null otherwise.
+     */
+    public function hasTrips(int $id): \stdClass
     {
         return $this->orderRepository->hasTrips($id);
     }

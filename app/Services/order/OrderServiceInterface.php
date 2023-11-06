@@ -2,31 +2,38 @@
 
 namespace App\Services\order;
 
+use App\Models\Order;
+
 interface OrderServiceInterface
 {
     /**
-     * Create a new order with additional data.
+     * Create a new order with the provided data.
      *
      * @param array $data The data for the new order.
-     * @return array The created order data.
+     *
+     * @return Order The created order instance.
+     *
+     * @throws \Exception If there is an error while creating the order.
      */
-    public function create(array $data): array;
+    public function create(array $data): Order;
+
 
     /**
      * Find an order by its ID.
      *
-     * @param int $id The ID of the order.
-     * @return array|null The order data, or null if not found.
+     * @param int $id The ID of the order to find.
+     *
+     * @return Order|null The found order instance or null if not found.
      */
-    public function findById(int $id): ?array;
+    public function findById(int $id): ?Order;
 
     /**
      * Check if an order has associated trips.
      *
      * @param int $id The ID of the order.
-     * @return bool True if the order has trips, false otherwise.
+     * @return \stdClass|null An object containing order ID, user ID, and associated trip ID if trips exist, or null otherwise.
      */
-    public function hasTrips(int $id): bool;
+    public function hasTrips(int $id): \stdClass;
 
     /**
      * Update an existing order with new data.
