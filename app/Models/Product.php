@@ -48,10 +48,10 @@ class Product extends Model
     /**
      * Get the orders in which the product is included.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function orders()
     {
-        return $this->hasMany(OrderDetail::class);
+        return $this->belongsToMany(Order::class,'orderdetails');
     }
 }

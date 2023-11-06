@@ -16,7 +16,7 @@ class CreateTripsTable extends Migration
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('order_id')->unique();
             $table->enum('status', ['ASSIGNED', 'AT_VENDOR', 'PICKED', 'DELIVERED'])->default('ASSIGNED'); // Enum column
             $table->softDeletes();
             $table->timestamps();

@@ -49,11 +49,21 @@ class Order extends Model
     /**
      * Get the products included in the order.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function products()
     {
-        return $this->hasMany(OrderDetail::class);
+        return $this->belongsToMany(Product::class,'orderdetails');
+    }
+
+    /**
+     * Get the trip included in the order.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function trip()
+    {
+        return $this->hasOne(Trip::class);
     }
 
     /**
