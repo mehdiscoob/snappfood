@@ -100,4 +100,42 @@ class DelayReportRepository implements DelayReportRepositoryInterface
             ->orderBy("dr.delay_time")
             ->paginate($perPage);
     }
+
+    /**
+     * Check if an agent has an open delay report.
+     *
+     * @param int $userId The ID of the agent.
+     *
+     * @return bool True if the agent has an open delay report of type "o", false otherwise.
+     */
+    public function agentHasDelayReport(int $userId): bool
+    {
+        return DB::table("delay_reports")->whereNull("deleted_at")->where('status', 'o')
+            ->where("user_id", $userId)->exists();
+    }
+
+    /**
+     * Get the oldest open delay report of type "o" and assign it to the given agent ID.
+     *
+     * @param int $agentId The ID of the agent to assign the delay report.
+     * @return \stdClass|null The assigned delay report instance, or null if no suitable delay report is found.
+     */
+    public function assignDelayReportToAgent(int $agentId): ?\stdClass
+    {
+        $oldestDelayReport = DB::table('delay_reports')
+            ->where('status', 'o')
+            ->orderBy('created_at')
+            ->lockForUpdate()
+            ->first();
+
+        if ($oldestDelayReport) {
+            DB::table('delay_reports')
+                ->where('id', $oldestDelayReport->id)
+                ->update([
+                    'user_id' => $agentId,
+                ]);
+            return $oldestDelayReport;
+        }
+        return null;
+    }
 }

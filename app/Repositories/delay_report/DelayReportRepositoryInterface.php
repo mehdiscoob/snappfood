@@ -72,4 +72,21 @@ interface DelayReportRepositoryInterface
      * @return \Illuminate\Contracts\Pagination\Paginator
      */
     public function getByReportOrderByDelayTime(int $vendor_id,int $perPage=50): Paginator;
+
+    /**
+     * Check if an agent has an open delay report.
+     *
+     * @param int $userId The ID of the agent.
+     *
+     * @return bool True if the agent has an open delay report of type "o", false otherwise.
+     */
+    public function agentHasDelayReport(int $userId): bool;
+
+    /**
+     * Get the oldest open delay report of type "o" and assign it to the given agent ID.
+     *
+     * @param int $agentId The ID of the agent to assign the delay report.
+     * @return \stdClass|null The assigned delay report instance, or null if no suitable delay report is found.
+     */
+    public function assignDelayReportToAgent(int $agentId): ?\stdClass;
 }

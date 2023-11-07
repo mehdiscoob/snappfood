@@ -28,5 +28,6 @@ class RefreshDBCommand extends Command
     {
         Artisan::call("migrate:refresh");
         Artisan::call("db:seed");
-        $this->info('Database refreshed and seeded successfully.');    }
+        $this->info('Database refreshed and seeded successfully.');
+    }
 }

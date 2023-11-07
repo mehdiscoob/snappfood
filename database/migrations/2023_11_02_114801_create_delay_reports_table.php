@@ -16,7 +16,7 @@ class CreateDelayReportsTable extends Migration
             $table->id();
             $table->enum('status', ['o', 'c'])->default('o');
             $table->enum('type', [0, 1])->default(0);
-            $table->tinyInteger('delay_time')->default(0);
+            $table->integer('delay_time')->default(0);
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->softDeletes();

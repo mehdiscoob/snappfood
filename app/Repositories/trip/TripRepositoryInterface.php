@@ -2,6 +2,7 @@
 
 namespace App\Repositories\trip;
 
+use App\Models\Trip;
 use Illuminate\Contracts\Pagination\Paginator;
 
 /**
@@ -17,7 +18,7 @@ interface TripRepositoryInterface
      * @param int $perPage The number of trips per page.
      * @return \Illuminate\Contracts\Pagination\Paginator
      */
-    public function paginate(int $perPage=50): Paginator;
+    public function paginate(int $perPage = 50): Paginator;
 
     /**
      * Get a specific trip by its ID.
@@ -34,15 +35,15 @@ interface TripRepositoryInterface
      * @param int $perPage The number of trips per page.
      * @return \Illuminate\Contracts\Pagination\Paginator
      */
-    public function findByOrder(int $orderId, int $perPage=50): Paginator;
+    public function findByOrder(int $orderId, int $perPage = 50): Paginator;
 
     /**
-     * Create a new trip record.
+     * Create a new trip with the provided data.
      *
-     * @param array $data The data for the new trip.
-     * @return int The ID of the created trip.
+     * @param array $data The data for creating the trip. Should include 'user_id', 'order_id', 'status', and other optional fields.
+     * @return Trip The newly created Trip instance.
      */
-    public function create(array $data): int;
+    public function create(array $data): Trip;
 
     /**
      * Update an existing trip record.

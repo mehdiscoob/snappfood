@@ -28,4 +28,9 @@ Route::middleware('auth:api')->prefix('order')->group(function () {
 Route::middleware('auth:api')->prefix('delay')->group(function () {
     Route::post("/",[\App\Http\Controllers\DelayReport\DelayReportController::class,"createDelayTime"]);
     Route::get("/vendor/order/time/{id}",[\App\Http\Controllers\DelayReport\DelayReportController::class,"getByReportOrderByDelayTime"]);
+    Route::post("/agent",[\App\Http\Controllers\DelayReport\DelayReportController::class,"assignDelayReportToAgent"]);
+});
+
+Route::middleware('auth:api')->prefix('trip')->group(function () {
+    Route::post("/",[\App\Http\Controllers\Trip\TripController::class,"createTrip"]);
 });

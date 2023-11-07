@@ -20,4 +20,11 @@ interface DelayReportServiceInterface
      * @return mixed
      */
     public function getReportByVendorOrderByDelayTime(int $vendor_id);
+
+    /**
+     * Assign an open delay report to an agent.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function assignDelayReportToAgent(): \Illuminate\Http\JsonResponse;
 }
