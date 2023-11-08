@@ -18,7 +18,7 @@ Make sure you have the following installed on your system:
    ```bash
    docker compose up -d
    ```
-This command sets up MySQL, PHP, and Nginx in Docker containers:
+This command sets up MySQL, PHP, and Nginx in Docker containers, and it also runs Migrate and Seeder plus Unit Test:
 - **MySQL:** Stores application data; configure it in your Laravel app.
 - **PHP:** Handles Laravel requests using PHP-FPM.
 - **Nginx:** Acts as a reverse proxy, directing HTTP requests to the PHP container.

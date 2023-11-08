@@ -10,7 +10,7 @@ services:
         ports:
             - "3306:3306"
         environment:
-            MYSQL_ROOT_PASSWORD: 123456789
+            MYSQL_ROOT_PASSWORD: yuor_password
             MYSQL_DATABASE: snappfood
         volumes:
             - mysql_data:/var/lib/mysql
@@ -29,9 +29,9 @@ services:
             DB_PORT: 3306
             DB_DATABASE: snappfood
             DB_USERNAME: root
-            DB_PASSWORD: 123456789
+            DB_PASSWORD: your_password
         command: >
-            bash -c "php artisan install-command && php artisan test"
+            bash -c "php artisan test && php artisan install-command"
         depends_on:
             - mysql
         networks:
