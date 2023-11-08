@@ -35,6 +35,19 @@ class UserService implements UserServiceInterface
         return $this->userRepository->findByMobile($mobile);
     }
 
+    /**
+     * Find a user by Randomly.
+     *
+     * @return User|null
+     */
+    public function findRandomly($role): ?User{
+        return $this->userRepository->findRandomly($role);
+    }
+
+    public function findById($id): ?User{
+        return $this->userRepository->findById($id);
+    }
+
     public function updateUser(array $userData, $userId)
     {
         return $this->userRepository->update($userData, $userId);

@@ -14,4 +14,8 @@ class VendorService implements VendorServiceInterface
     }
 
 
+    public function findRandomly()
+    {
+        return $this->vendorRepository->findRandomly();
+    }
 }

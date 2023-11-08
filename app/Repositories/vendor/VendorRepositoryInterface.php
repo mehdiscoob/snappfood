@@ -22,6 +22,14 @@ interface VendorRepositoryInterface
     public function find(int $id);
 
     /**
+     * Find a vendor randomly.
+     *
+     * @return \stdClass|null
+     */
+    public function findRandomly();
+
+
+    /**
      * Create a new vendor.
      *
      * @param array $data

@@ -55,6 +55,14 @@ class OrderService implements OrderServiceInterface
         return $this->orderRepository->find($id);
     }
 
+    /**
+     * Find an order by Randomly.
+     *
+     * @return Order|null
+     */
+    public function findRandomly(): ?Order{
+        return $this->orderRepository->findRandomly();
+    }
 
     /**
      * Find an order by its ID.

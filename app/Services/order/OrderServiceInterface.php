@@ -28,6 +28,13 @@ interface OrderServiceInterface
     public function findById(int $id): ?Order;
 
     /**
+     * Find an order by Randomly.
+     *
+     * @return Order|null
+     */
+    public function findRandomly(): ?Order;
+
+    /**
      * Check if an order has associated trips.
      *
      * @param int $id The ID of the order.

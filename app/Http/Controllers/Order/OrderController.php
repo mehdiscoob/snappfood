@@ -30,4 +30,15 @@ class OrderController extends Controller
     {
         return $this->orderService->create($request->all());
     }
+
+    /**
+     * Create a new order.
+     *
+     * @param CreateOrderRequest $request
+     * @return mixed
+     */
+    public function findRandomly()
+    {
+        return $this->orderService->findRandomly();
+    }
 }

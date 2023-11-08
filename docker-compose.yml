@@ -29,9 +29,22 @@ services:
             DB_PORT: 3306
             DB_DATABASE: snappfood
             DB_USERNAME: root
-            DB_PASSWORD: your_password
+            DB_PASSWORD: 123456789
+        command: >
+            bash -c "php artisan install-command && php artisan test"
         depends_on:
             - mysql
+        networks:
+            - snappfood-network
+
+    nginx:
+        image: nginx:latest
+        ports:
+            - "80:80"
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf
+        depends_on:
+            - laravel-app
         networks:
             - snappfood-network
 

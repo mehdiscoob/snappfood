@@ -3,6 +3,7 @@
 namespace App\Repositories\vendor;
 
 use App\Models\Vendor;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class VendorRepository
@@ -30,6 +31,21 @@ class VendorRepository implements VendorRepositoryInterface
     public function find(int $id)
     {
         return Vendor::find($id);
+    }
+
+    /**
+     * Find a vendor randomly.
+     *
+     * @return \stdClass|null
+     */
+    public function findRandomly()
+    {
+        $orderVendor=DB::table("orders as o")->select(["o.id as orderId","v.id as vendorId"])
+            ->join('vendors as v','v.id','=','o.vendor_id');
+        return DB::table('delay_reports as dr')->select(["ov.vendorId"])
+            ->joinSub($orderVendor,'ov','ov.orderId','=','dr.order_id')
+            ->inRandomOrder()
+            ->first();
     }
 
     /**

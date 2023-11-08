@@ -28,5 +28,6 @@ class InstallCommand extends Command
     {
         Artisan::call("migrate");
         Artisan::call("db:seed");
-        $this->info('Database installed and seeded successfully.');    }
+        $this->info('Database installed and seeded successfully.');
+    }
 }

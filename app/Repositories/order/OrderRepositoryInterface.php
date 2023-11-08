@@ -22,6 +22,13 @@ interface OrderRepositoryInterface
     public function find(int $id);
 
     /**
+     * Find an order by Randomly.
+     *
+     * @return Order|null
+     */
+    public function findRandomly();
+
+    /**
      * Create a new order.
      *
      * @param array $data

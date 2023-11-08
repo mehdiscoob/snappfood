@@ -1,66 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sanppfood Laravel Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is a Laravel project that includes a Docker setup for easy development and deployment.
 
-## About Laravel
+## Installation
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Prerequisites
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Make sure you have the following installed on your system:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-## Learning Laravel
+### Steps
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Build and start the Docker containers:**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+   ```bash
+   docker compose up -d
+   ```
+This command sets up MySQL, PHP, and Nginx in Docker containers:
+- **MySQL:** Stores application data; configure it in your Laravel app.
+- **PHP:** Handles Laravel requests using PHP-FPM.
+- **Nginx:** Acts as a reverse proxy, directing HTTP requests to the PHP container.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Access your Laravel app at http://localhost:9000. Code changes reflect in real-time.
 
-## Laravel Sponsors
+2. **Integrate APIs:**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+**API Endpoints:**
 
-### Premium Partners
+1. **Create Delay Report:**
+    - **Endpoint:** `http://localhost:9000/api/delay/`
+    - **Method:** POST
+    - **Description:** Creates delay reports. To create a delay report, you need an order_id, which you can obtain from the API: `http://127.0.0.1:9000/api/order/randomly`. Additionally, you need user information obtained from `http://127.0.0.1:9000/api/user/{order.user_id}` for Authorization (api_token), based on the user_id of the order.
+      Following JSON body:
+     ```json
+     {
+         "order_id": 1 //For example
+     }
+     ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+2. **Get Delay Reports by Vendor:**
+    - **Endpoint:** `http://localhost:9000/api/delay/vendor/order/time/{vendor_id}`
+    - **Method:** GET
+    - **Description:** Retrieves all delay reports ordered by delay_time for a specific vendor. You can obtain the vendor ID from `http://127.0.0.1:9000/api/vendor/randomly`. If you receive a vendorId, it means this vendor has delay reports.
+      Following JSON body:
+     ```json
+     {
+         "vendor_id": 6 //For example
+     }
+     ```
 
-## Contributing
+3. **Assign Agent to Delay Report:**
+    - **Endpoint:** `http://localhost:9000/api/delay/agent`
+    - **Method:** POST
+    - **Description:** This endpoint assigns an agent to a delay report. To assign an agent, send a POST request to this URL. For authorization, use the api_token obtained from `http://127.0.0.1:9000/api/user/randomly?role=agent`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Helpers
 
-## Code of Conduct
+- **Create Order:**
+    - **Endpoint:** `POST http://localhost:9000/api/order`
+    - **Method:** POST
+    - **Description:** This endpoint allows you to create orders. Send a POST request to this URL, providing the `vendor_id` obtained from `http://localhost:9000/api/vendor/randomly` as a parameter.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Create Trips:**
+    - **Endpoint:** `POST http://localhost:9000/api/trip`
+    - **Method:** POST
+    - **Description:** To create trips, send a POST request to this URL. Include the `order_id` obtained from `http://localhost:9000/api/order/randomly` and the driver's authorization (api_token) obtained from `http://localhost:9000/api/user/randomly?role=driver`.
 
-## Security Vulnerabilities
+- **Refresh Database:**
+    - **Command:** `php artisan refresh-db-command`
+    - **Description:** You can refresh the database using this Artisan command. Execute this command in the Laravel project directory to reset and reseed the database, ensuring a clean and updated state for your application.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Feel free to utilize these helper endpoints and commands for managing orders, trips, and database refresh operations in your Laravel application!
 
-## License
+### Testing
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This Laravel project includes unit tests for the `DelayReportService` class. These tests validate the functionality and statuses of the main APIs.
+
+To run the tests, execute the following command in your terminal within the project directory:
+
+```bash
+php artisan test
+```
+
+
+
+
+
+

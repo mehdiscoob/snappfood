@@ -16,6 +16,16 @@ class UserRepository implements UserRepositoryInterface
         return User::find($userId);
     }
 
+    /**
+     * Find a user by Randomly.
+     *
+     * @return User|null
+     */
+    public function findRandomly($role): ?User{
+
+        return User::where("role",$role!=null?$role:"customer")->inRandomOrder()->first();
+    }
+
     public function findByEmail($email)
     {
         return User::where('email', $email)->first();

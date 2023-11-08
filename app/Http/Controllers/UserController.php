@@ -18,31 +18,14 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function register(CreateUserRequest $request)
+    public function findByRandomly(Request $request)
     {
-        $registered = $this->userService->register($request->all());
-        if ($registered) {
-            return response()->json($registered, 201);
-        } else {
-            return response()->json(['message' => 'User registration failed'], 500);
-        }
+        return $this->userService->findRandomly($request->role);
     }
 
-    public function getUserById($id)
+    public function findById($id)
     {
-
-        return $this->userService->getUserById($id);
-   }
-
-    public function verifyAccount(Request $request)
-    {
-
-        $user= $this->userService->verifyAccount($request->code);
-        if ($user) {
-            return response()->json([$user]);
-        } else {
-            return response()->json(['message' => 'User verification failed'], 500);
-        }
+        return $this->userService->findById($id);
     }
 
 

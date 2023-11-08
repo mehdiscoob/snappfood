@@ -13,17 +13,23 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::get("user/randomly",[\App\Http\Controllers\UserController::class,"findByRandomly"]);
+Route::get("user/{id}",[\App\Http\Controllers\UserController::class,"findById"]);
+Route::get("vendor/randomly",[\App\Http\Controllers\Vendor\VendorController::class,"findRandomly"]);
 
 Route::prefix('user')->group(function () {
 Route::post("/",[\App\Http\Controllers\UserController::class,"register"]);
-Route::get("/{id}",[\App\Http\Controllers\UserController::class,'getUserById'])->middleware('auth:api');
 Route::post("verify/{id}",[\App\Http\Controllers\UserController::class,'verifyAccount'])->middleware('auth:api');
 });
+
 
 Route::middleware('auth:api')->prefix('order')->group(function () {
 //    Route::get("/",[\App\Http\Controllers\Order\OrderController::class,"userTickets"]);
     Route::post("/",[\App\Http\Controllers\Order\OrderController::class,"createOrder"]);
 });
+
+Route::get("order/randomly",[\App\Http\Controllers\Order\OrderController::class,"findRandomly"]);
+
 
 Route::middleware('auth:api')->prefix('delay')->group(function () {
     Route::post("/",[\App\Http\Controllers\DelayReport\DelayReportController::class,"createDelayTime"]);

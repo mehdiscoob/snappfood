@@ -38,7 +38,17 @@ class OrderRepository implements OrderRepositoryInterface
      */
     public function find(int $id)
     {
-        return Order::find($id);
+        return Order::with(["trip"])->find($id);
+    }
+
+    /**
+     * Find an order by Randomly.
+     *
+     * @return Order|null
+     */
+    public function findRandomly()
+    {
+        return Order::with(["trip"])->inRandomOrder()->first();
     }
 
     /**
