@@ -110,6 +110,8 @@ class DelayReportService implements DelayReportServiceInterface
      */
     public function getReportByVendorOrderByDelayTime(int $vendor_id)
     {
+        $agent = Auth::user();
+        if ($agent->role != "agent") abort(403, "You can't access to this address");;
         return $this->delayReportRepository->getByReportOrderByDelayTime($vendor_id);
     }
 

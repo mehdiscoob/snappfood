@@ -37,9 +37,9 @@ class DelayReportController extends Controller
      * Get delay reports for a specific vendor, ordered by delay time.
      *
      * @param int $id
-     * @return JsonResponse
+     * @return mixed
      */
-    public function getByReportOrderByDelayTime(int $id): JsonResponse
+    public function getByReportOrderByDelayTime(int $id): mixed
     {
         return $this->delayReportService->getReportByVendorOrderByDelayTime($id);
     }

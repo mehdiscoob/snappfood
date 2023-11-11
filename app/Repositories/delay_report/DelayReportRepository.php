@@ -94,7 +94,7 @@ class DelayReportRepository implements DelayReportRepositoryInterface
     public function getByReportOrderByDelayTime(int $vendor_id,int $perPage=50): Paginator
     {
         $orderVendor=DB::table("orders as o")->select(["o.id as orderId","v.name as vendorName","o.orderNumber"])
-            ->join('vendors as v','v.id','=','o.vendor_id');
+            ->join('vendors as v','v.id','=','o.vendor_id')->where("v.id",$vendor_id);
         return DB::table('delay_reports as dr')->select(["dr.*","ov.vendorName","ov.orderNumber"])
             ->joinSub($orderVendor,'ov','ov.orderId','=','dr.order_id')
             ->orderBy("dr.delay_time")

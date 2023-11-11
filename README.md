@@ -43,7 +43,7 @@ Access your Laravel app at http://localhost:9000. Code changes reflect in real-t
 2. **Get Delay Reports by Vendor:**
     - **Endpoint:** `http://localhost:9000/api/delay/vendor/order/time/{vendor_id}`
     - **Method:** GET
-    - **Description:** Retrieves all delay reports ordered by delay_time for a specific vendor. You can obtain the vendor ID from `http://127.0.0.1:9000/api/vendor/randomly`. If you receive a vendorId, it means this vendor has delay reports.
+    - **Description:** Retrieves all delay reports ordered by delay_time for a specific vendor. You can obtain the vendor ID from `http://127.0.0.1:9000/api/vendor/randomly`. If you receive a vendorId, it means this vendor has delay reports. For authorization, use the api_token obtained from `http://127.0.0.1:9000/api/user/randomly?role=agent`.
       Following JSON body:
      ```json
      {
@@ -69,7 +69,7 @@ Access your Laravel app at http://localhost:9000. Code changes reflect in real-t
     - **Description:** To create trips, send a POST request to this URL. Include the `order_id` obtained from `http://localhost:9000/api/order/randomly` and the driver's authorization (api_token) obtained from `http://localhost:9000/api/user/randomly?role=driver`.
 
 - **Refresh Database:**
-    - **Command:** `php artisan refresh-db-command`
+    - **Command:** `docker exec -it snappfood-laravel-app-1 php artisan refresh-db-command`
     - **Description:** You can refresh the database using this Artisan command. Execute this command in the Laravel project directory to reset and reseed the database, ensuring a clean and updated state for your application.
 
 Feel free to utilize these helper endpoints and commands for managing orders, trips, and database refresh operations in your Laravel application!
@@ -81,7 +81,7 @@ This Laravel project includes unit tests for the `DelayReportService` class. The
 To run the tests, execute the following command in your terminal within the project directory:
 
 ```bash
-php artisan test
+docker exec -it snappfood-laravel-app-1 php artisan test
 ```
 
 

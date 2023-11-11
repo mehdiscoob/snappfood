@@ -50,6 +50,8 @@ class DelayReportServiceTest extends TestCase
     public function it_gets_delay_reports_for_vendor()
     {
         $vendorId = Vendor::inRandomOrder()->first()->id;
+        $agent = User::inRandomOrder()->where("role","agent")->first();
+        Auth::login($agent);
         $delayReports = $this->delayReportService->getReportByVendorOrderByDelayTime($vendorId);
 
         $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $delayReports);
@@ -58,7 +60,7 @@ class DelayReportServiceTest extends TestCase
     /** @test */
     public function it_assigns_delay_report_to_agent()
     {
-        $agent = User::inRandomOrder()->first();
+        $agent = User::inRandomOrder()->where("role","agent")->first();
         Auth::login($agent);
         try {
             $response = $this->delayReportService->assignDelayReportToAgent();
