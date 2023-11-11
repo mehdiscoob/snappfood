@@ -14,7 +14,7 @@ class DelayReportFactory extends Factory
 
     public function definition()
     {
-        $order=Order::pluck("id");
+        $order=Order::whereNotIn("id",[1,2,3,4])->pluck("id");
         return [
             'order_id' => function () use($order){
                 return $this->faker->randomElement($order);

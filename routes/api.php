@@ -29,6 +29,7 @@ Route::middleware('auth:api')->prefix('order')->group(function () {
 });
 
 Route::get("order/randomly",[\App\Http\Controllers\Order\OrderController::class,"findRandomly"]);
+Route::get("order/{id}",[\App\Http\Controllers\Order\OrderController::class,"finById"]);
 
 
 Route::middleware('auth:api')->prefix('delay')->group(function () {

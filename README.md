@@ -18,7 +18,10 @@ Make sure you have the following installed on your system:
    ```bash
    docker compose up -d
    ```
-This command sets up MySQL, PHP, and Nginx in Docker containers, and it also runs Migrate and Seeder plus Unit Test:
+   ```bash
+   docker exec -it snappfood-laravel-app-1 php artisan refresh-db-command
+   ```
+This command sets up MySQL, PHP, and Nginx in Docker containers, and it also runs Migrate:
 - **MySQL:** Stores application data; configure it in your Laravel app.
 - **PHP:** Handles Laravel requests using PHP-FPM.
 - **Nginx:** Acts as a reverse proxy, directing HTTP requests to the PHP container.
@@ -32,7 +35,7 @@ Access your Laravel app at http://localhost:9000. Code changes reflect in real-t
 1. **Create Delay Report:**
     - **Endpoint:** `http://localhost:9000/api/delay/`
     - **Method:** POST
-    - **Description:** Creates delay reports. To create a delay report, you need an order_id, which you can obtain from the API: `http://127.0.0.1:9000/api/order/randomly`. Additionally, you need user information obtained from `http://127.0.0.1:9000/api/user/{order.user_id}` for Authorization (api_token), based on the user_id of the order.
+    - **Description:** Creates delay reports. To create a delay report, you need an order_id, which you can obtain from the API: `http://127.0.0.1:9000/api/order/randomly`. Additionally, you need user information obtained from `http://127.0.0.1:9000/api/user/{order.user_id}` for Authorization (api_token), based on the user_id of the order.(You can call `http://127.0.0.1:9000/api/order/[1 to 4]` if you want the order doesn't have Delay Reports)
       Following JSON body:
      ```json
      {

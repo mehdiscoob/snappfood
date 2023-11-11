@@ -41,4 +41,14 @@ class OrderController extends Controller
     {
         return $this->orderService->findRandomly();
     }
+
+    /**
+     * Find an order by ID.
+     *
+     * @return mixed
+     */
+    public function finById($id)
+    {
+        return $this->orderService->findById($id);
+    }
 }

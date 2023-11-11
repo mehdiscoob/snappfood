@@ -7,7 +7,7 @@ use App\Models\DelayReport;
 use App\Repositories\delay_report\DelayReportRepositoryInterface;
 use App\Services\order\OrderService;
 use App\Services\trip\TripService;
-use App\Services\User\UserService;
+use App\Services\user\UserService;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
