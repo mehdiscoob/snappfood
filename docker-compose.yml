@@ -7,6 +7,11 @@ networks:
 services:
     mysql:
         image: mysql:latest
+        healthcheck:
+            test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+            interval: 5s
+            timeout: 2s
+            retries: 3
         ports:
             - "3306:3306"
         environment:
@@ -28,9 +33,10 @@ services:
             DB_DATABASE: snappfood
             DB_USERNAME: root
             DB_PASSWORD: 123456789
-#        command: bash -c "php artisan test && php artisan refresh-db-command && php-fpm"
+        command: bash -c "php artisan test && php artisan refresh-db-command && php-fpm"
         depends_on:
-            - mysql
+            mysql:
+                condition: service_healthy
         networks:
             - snappfood-network
 
