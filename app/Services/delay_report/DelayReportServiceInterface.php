@@ -2,16 +2,18 @@
 
 namespace App\Services\delay_report;
 
+use App\Models\DelayReport;
+
 interface DelayReportServiceInterface
 {
     /**
      * Create a delay report for an order.
      *
      * @param array $data
-     * @return array
+     * @return bool
      * @throws \Exception
      */
-    public function create(array $data);
+    public function create(array $data):\Illuminate\Http\JsonResponse|bool;
 
     /**
      * Get delay reports for a specific vendor, ordered by delay time.
@@ -24,7 +26,7 @@ interface DelayReportServiceInterface
     /**
      * Assign an open delay report to an agent.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \stdClass
      */
-    public function assignDelayReportToAgent(): \Illuminate\Http\JsonResponse;
+    public function assignDelayReportToAgent(): \stdClass;
 }

@@ -3,20 +3,20 @@
 namespace App\Services\delay_report;
 
 use App\Helpers\DateHelper;
+use App\Models\DelayReport;
 use App\Repositories\delay_report\DelayReportRepositoryInterface;
 use App\Services\order\OrderService;
 use App\Services\trip\TripService;
-use App\Services\user\UserService;
+use App\Services\User\UserService;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class DelayReportService
+class DelayReportService implements DelayReportServiceInterface
 {
     private $delayReportRepository;
     private $orderService;
-    private $userService;
 
 
     /**
@@ -25,49 +25,81 @@ class DelayReportService
      * @param DelayReportRepositoryInterface $delayReportRepository
      * @param OrderService $orderService
      */
-    public function __construct(DelayReportRepositoryInterface $delayReportRepository, OrderService $orderService,UserService $userService)
+    public function __construct(DelayReportRepositoryInterface $delayReportRepository, OrderService $orderService)
     {
         $this->delayReportRepository = $delayReportRepository;
         $this->orderService = $orderService;
-        $this->userService = $userService;
     }
 
     /**
      * Create a delay report for an order.
      *
      * @param array $data
-     * @return \Illuminate\Http\JsonResponse|bool
+     * @return bool
      * @throws \Exception
      */
-    public function create(array $data)
+    public function create(array $data) :bool
     {
         $orderHasTrips = $this->orderService->hasTrips($data['order_id']);
         $isOpenDelay = $this->delayReportRepository->openDelayReportByOrder($data['order_id']);
         $data['delay_time'] = intval(round((strtotime(now()) - strtotime($orderHasTrips->delivery_time)) / 60));
-        if (Auth::id() != $orderHasTrips->user_id) return response()->json(['message' => 'Unauthorized'], 401);
-        if ($data['delay_time'] < 0) return response()->json(['message' => 'Your order is not to be late, have a patience please'],200);
-        if ($isOpenDelay) return response()->json(['message' => 'You have already opened report for this order'],422);
+        $this->validateDelayCreation($orderHasTrips, $isOpenDelay, $data);
         DB::beginTransaction();
         try {
             if (isset($orderHasTrips->tripId)) {
-                if ($orderHasTrips->tripStatus == "DELIVERED") return response()->json(['message' => 'The Order is delivered'],400);
-                $httpClient = new Client([
-                    'verify' => false,
-                ]);
-                $response = $httpClient->get('https://run.mocky.io/v3/2733e71a-8865-4f04-97a5-e66c42358a0e');
-                $responseBody = json_decode($response->getBody()->getContents());
-                $addTime = (new DateHelper())->addTimeToNow($responseBody->minutes, "minutes");
-                $order = $this->orderService->update($data['order_id'], ["delivery_time" => $addTime]);
+                $this->handleDelayedOrderWithTrip($orderHasTrips, $data);
             } else {
                 $data['type'] = "1";
             }
-            $this->delayReportRepository->create($data);
             DB::commit();
-            return response()->json(['message' => 'Delay report created successfully'], 201);
+            return $this->delayReportRepository->create($data);
+
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
         }
+    }
+
+    /**
+     * Validate delay report creation.
+     *
+     * @param mixed $orderHasTrips
+     * @param mixed $isOpenDelay
+     * @param array $data
+     * @throws \Illuminate\Http\JsonResponse
+     */
+    private function validateDelayCreation($orderHasTrips, $isOpenDelay, array $data)
+    {
+        if (Auth::id() != $orderHasTrips->user_id) abort(401, 'Unauthorized');
+        if ($data['delay_time'] < 0) abort(423, 'Your order is not to be late, have patience please');
+        if ($isOpenDelay) abort(422, 'You have already opened a report for this order');
+
+    }
+
+    /**
+     * Handle delayed order with a trip.
+     *
+     * @param mixed $orderHasTrips
+     * @param array $data
+     */
+    private function handleDelayedOrderWithTrip($orderHasTrips, array $data)
+    {
+        if ($orderHasTrips->tripStatus == "DELIVERED") abort(400, 'The Order is delivered');
+        $this->performExternalApiCallAndUpdateOrder($data);
+    }
+
+    /**
+     * Perform an external API call and update the order.
+     *
+     * @param array $data
+     */
+    private function performExternalApiCallAndUpdateOrder(array $data)
+    {
+        $httpClient = new Client(['verify' => false]);
+        $response = $httpClient->get('https://run.mocky.io/v3/2733e71a-8865-4f04-97a5-e66c42358a0e');
+        $responseBody = json_decode($response->getBody()->getContents());
+        $addTime = (new DateHelper())->addTimeToNow($responseBody->minutes, "minutes");
+        $this->orderService->update($data['order_id'], ["delivery_time" => $addTime]);
     }
 
     /**
@@ -84,21 +116,18 @@ class DelayReportService
     /**
      * Assign an open delay report to an agent.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \stdClass
      */
-    public function assignDelayReportToAgent(): \Illuminate\Http\JsonResponse
+    public function assignDelayReportToAgent(): \stdClass
     {
-        $agent=Auth::user();
-        if ($agent->role!="agent") return response()->json(['message' => "You can't access to this address"],403);
+        $agent = Auth::user();
+        if ($agent->role != "agent") abort(403, "You can't access to this address");;
 
-        $hasReport=$this->delayReportRepository->agentHasDelayReport($agent->id);
+        if ($this->delayReportRepository->agentHasDelayReport($agent->id)) abort(422, 'You have already opened a report');
 
-        if ($hasReport) return response()->json(['message' => 'You have already open report'],422);
+        $update = $this->delayReportRepository->assignDelayReportToAgent($agent->id);
 
-        $update=$this->delayReportRepository->assignDelayReportToAgent($agent->id);
-
-        return isset($update)? response()->json(['message' => 'Delay report assigned to agent successfully',"data"=>$update])
-        :response()->json(['message' => 'There is no open Delay report now']);
+        return $update ?? abort(404, 'There is no open Delay report now');
     }
 
 

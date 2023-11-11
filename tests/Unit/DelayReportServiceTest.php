@@ -38,9 +38,12 @@ class DelayReportServiceTest extends TestCase
         $data = [
             'order_id' => $order->id,
         ];
-        $response = $this->delayReportService->create($data);
-        $statusCode = $response->getStatusCode();
-        $this->assertTrue(in_array($statusCode, [200, 201,400,422]));
+        try {
+            $response = $this->delayReportService->create($data);
+            $this->assertTrue($response);
+        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+            $this->assertTrue(in_array($e->getStatusCode(), [423,422,401,400]));
+        }
     }
 
     /** @test */
@@ -57,9 +60,12 @@ class DelayReportServiceTest extends TestCase
     {
         $agent = User::inRandomOrder()->first();
         Auth::login($agent);
-        $response = $this->delayReportService->assignDelayReportToAgent();
-        $statusCode=$response->getStatusCode();
-        $this->assertTrue(in_array($statusCode, [200,422,403]));
+        try {
+            $response = $this->delayReportService->assignDelayReportToAgent();
+            $this->assertInstanceOf(\stdClass::class, $response);
+        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+            $this->assertTrue(in_array($e->getStatusCode(), [403, 422, 404]));
+        }
     }
 
 }

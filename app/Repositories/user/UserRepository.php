@@ -1,42 +1,74 @@
 <?php
 
-namespace App\Repositories\user;
+namespace App\Repositories\User;
 
 use App\Models\User;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function create(array $data)
+    /**
+     * Create a new user.
+     *
+     * @param array $data
+     * @return User
+     */
+    public function create(array $data): User
     {
         return User::create($data);
     }
 
-    public function findById($userId)
+    /**
+     * Find a user by their ID.
+     *
+     * @param int $userId
+     * @return User|null
+     */
+    public function findById(int $userId): ?User
     {
         return User::find($userId);
     }
 
     /**
-     * Find a user by Randomly.
+     * Find a user randomly based on their role.
      *
+     * @param string|null $role
      * @return User|null
      */
-    public function findRandomly($role): ?User{
-
-        return User::where("role",$role!=null?$role:"customer")->inRandomOrder()->first();
+    public function findRandomly(?string $role): ?User
+    {
+        return User::where('role', $role??"customer")->inRandomOrder()->first();
     }
 
-    public function findByEmail($email)
+    /**
+     * Find a user by their email address.
+     *
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
     {
         return User::where('email', $email)->first();
     }
 
-    public function findByMobile($mobile)
+    /**
+     * Find a user by their mobile number.
+     *
+     * @param string $mobile
+     * @return User|null
+     */
+    public function findByMobile(string $mobile): ?User
     {
         return User::where('mobile', $mobile)->first();
     }
 
-    public function update(array $data, $userId)
+    /**
+     * Update a user's information.
+     *
+     * @param array $data
+     * @param int $userId
+     * @return User|null
+     */
+    public function update(array $data, int $userId): ?User
     {
         $user = $this->findById($userId);
 
@@ -48,7 +80,13 @@ class UserRepository implements UserRepositoryInterface
         return null;
     }
 
-    public function delete($userId)
+    /**
+     * Delete a user by their ID.
+     *
+     * @param int $userId
+     * @return bool
+     */
+    public function delete(int $userId): bool
     {
         $user = $this->findById($userId);
 

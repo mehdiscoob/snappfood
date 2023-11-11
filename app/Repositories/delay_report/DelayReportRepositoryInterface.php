@@ -42,9 +42,9 @@ interface DelayReportRepositoryInterface
      *
      * @param array $data The data for the delay report.
      *
-     * @return \App\Models\DelayReport The created delay report instance.
+     * @return bool True if the creating is successful, false otherwise.
      */
-    public function create(array $data): DelayReport;
+    public function create(array $data): bool;
 
     /**
      * Update an existing delay report record.

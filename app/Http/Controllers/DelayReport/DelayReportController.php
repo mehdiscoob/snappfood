@@ -26,9 +26,9 @@ class DelayReportController extends Controller
      * Create a new delay report.
      *
      * @param CreateDelayReportRequest $request
-     * @return JsonResponse
+     * @return bool
      */
-    public function createDelayTime(CreateDelayReportRequest $request): JsonResponse
+    public function createDelayTime(CreateDelayReportRequest $request): bool
     {
       return $this->delayReportService->create($request->all());
     }
@@ -41,8 +41,7 @@ class DelayReportController extends Controller
      */
     public function getByReportOrderByDelayTime(int $id): JsonResponse
     {
-        $delayReports = $this->delayReportService->getReportByVendorOrderByDelayTime($id);
-        return response()->json($delayReports, 200);
+        return $this->delayReportService->getReportByVendorOrderByDelayTime($id);
     }
 
     /**
@@ -51,9 +50,9 @@ class DelayReportController extends Controller
      * This method checks if the authenticated user is an agent and assigns an open delay report to them.
      * If the assignment is successful, it returns a success message; otherwise, it provides an appropriate error message.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \stdClass
      */
-    public function assignDelayReportToAgent()
+    public function assignDelayReportToAgent():\stdClass
     {
         return $this->delayReportService->assignDelayReportToAgent();
     }

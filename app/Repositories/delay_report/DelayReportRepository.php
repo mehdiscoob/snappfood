@@ -52,11 +52,11 @@ class DelayReportRepository implements DelayReportRepositoryInterface
      *
      * @param array $data The data for the delay report.
      *
-     * @return \App\Models\DelayReport The created delay report instance.
+     * @return bool True if the creating is successful, false otherwise.
      */
-    public function create(array $data): DelayReport
+    public function create(array $data): bool
     {
-        return DelayReport::create($data);
+        return DB::table("delay_reports")->insert($data);
     }
 
     /**
