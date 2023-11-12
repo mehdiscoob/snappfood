@@ -2,8 +2,6 @@
 
 namespace Database\Factories;
 
-// TripFactory.php
-
 use App\Models\Order;
 use App\Models\Trip;
 use App\Models\User;

@@ -24,13 +24,13 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
-            'mobile' => $this->faker->unique()->phoneNumber, // Assuming you want random phone numbers
+            'mobile' => $this->faker->unique()->phoneNumber,
             'verification_code' => null,
             'email_verified_at' => now(),
             'mobile_verified_at' => now(),
-            'password' => bcrypt('password'), // Default password for all users (you can customize this)
-            'api_token' => \Illuminate\Support\Str::random(60), // Generate a random API token
-            'verified' => true, // Assuming you want all users to be verified
+            'password' => bcrypt('password'),
+            'api_token' => \Illuminate\Support\Str::random(60),
+            'verified' => true,
             'remember_token' => \Illuminate\Support\Str::random(10),
             'role' => $this->faker->randomElement(['customer','agent','driver'])
         ];
